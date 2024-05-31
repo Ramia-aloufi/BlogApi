@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BlogApi.src.DB;
 using BlogApi.src.DTOs;
 using BlogApi.src.Models;
 using BlogApi.src.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BlogApi.Controllers
@@ -15,21 +18,26 @@ namespace BlogApi.Controllers
     [ApiController]
     public class PostController : Controller
     {
+        private readonly ILogger<PostController> _logger;
+        private readonly DBContext _context;
+
+        private readonly IMapper _mapper;
+
+        public PostController(ILogger<PostController> logger , DBContext context , IMapper mapper)
+        {
+            _logger = logger;
+            _context = context;
+            _mapper = mapper;
+        }
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public ActionResult<IEnumerable<PostDTO>> GetPosts()
-        {
-            var posts = PostRepository.Posts.Select(p =>
-                new PostDTO()
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Content = p.Content,
-                    CreatedAt = p.CreatedAt,
-                    UpdatedAt = p.UpdatedAt
-                });
-            return Ok(posts);
+        {  
+            var posts = _context.posts.ToList();
+            var postsDTO = _mapper.Map<List<PostDTO>>(posts);
+             _logger.LogInformation("GetPosts Started");
+            return Ok(postsDTO);
         }
         [HttpGet("{id:int}",Name ="GetPostsById")]
         [ProducesResponseType(200)]
@@ -39,23 +47,21 @@ namespace BlogApi.Controllers
         public ActionResult<IEnumerable<PostDTO>> GetPostsById(int id)
         {
             {
-                if (id >= 0)
-                    return BadRequest();
+                if (id <= 0){
+                     _logger.LogWarning("GetPostsById BadRequest");
 
-                var post = PostRepository.Posts.Where(post => post.Id == id).FirstOrDefault();
+                    return BadRequest();
+                }
+
+                var post = _context.posts.Where(post => post.Id == id).FirstOrDefault();
                 if (post != null)
                 {
-
-                    PostDTO selectedPost = new PostDTO()
-                    {
-                        Id = post.Id,
-                        Title = post.Title,
-                        Content = post.Content,
-                        CreatedAt = post.CreatedAt,
-                        UpdatedAt = post.UpdatedAt
-                    };
+                    PostDTO selectedPost = _mapper.Map<PostDTO>(post);
+                 _logger.LogWarning("GetPostsById Successfully");
                     return Ok(selectedPost);
                 }
+                _logger.LogWarning("GetPostsById NotFound");
+
                 return NotFound($"Student with {id} not found");
 
             }
@@ -67,13 +73,14 @@ namespace BlogApi.Controllers
         [ProducesResponseType(500)]
         public ActionResult<bool> DeletePostsById(int id)
         {
-            if (id >= 0)
+            if (id <= 0)
                 return BadRequest();
 
-            var post = PostRepository.Posts.Where(post => post.Id == id).FirstOrDefault();
+            var post = _context.posts.Where(post => post.Id == id).FirstOrDefault();
             if (post == null)
                 return NotFound(false);
-            PostRepository.Posts.Remove(post);
+            _context.posts.Remove(post);
+            _context.SaveChanges();
             return Ok(true);
 
         }
@@ -86,21 +93,34 @@ namespace BlogApi.Controllers
         {
             if (post == null)
                 return BadRequest();
-            int newId = PostRepository.Posts.LastOrDefault().Id + 1;
-            Post newPost = new Post()
-            {
-                Id = newId,
-                Title = post.Title,
-                Content = post.Content,
-                CreatedAt = post.CreatedAt,
-                UpdatedAt = post.UpdatedAt
-            };
-            PostRepository.Posts.Add(newPost);
-            post.Id = newId;
+            Post newPost = _mapper.Map<Post>(post);
+            _context.posts.Add(newPost);
+            _context.SaveChanges();
             return CreatedAtRoute("GetPostsById",new {id=post.Id},post);
 
         }
+        [HttpPut]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult UpdatePostsById([FromBody] PostDTO model)
+        {
+        
+                if (model.Id <= 0 || model == null)
+                    return BadRequest();
+                var post = _context.posts.AsNoTracking().Where(post => post.Id == model.Id).FirstOrDefault();
+                if (post == null)
+                     return NotFound($"post with {model.Id} not found");
+                   var updatedPost = _mapper.Map<Post>(model);
+                      _context.posts.Update(updatedPost);
+                        _context.SaveChanges();
+                    return NoContent();
+                
+
+            }
+        }
 
 
-    }
+    
 }

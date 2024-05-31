@@ -14,9 +14,9 @@ namespace BlogApi.src.DTOs
         public string Title { get; set; }
         [Required]
         public string Content { get; set; }
-                [Url]
-        public string ImageUrl { get; set; }
-        public DateTime CreatedAt { get; set; } 
-        public DateTime UpdatedAt { get; set; } 
+        [Url]
+        public string ImageUrl { get; set; } = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR63XIy9VsNtzBDN5WqZPXvBpoHdmq8YUlSYEfwNghm0Q&s";
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
