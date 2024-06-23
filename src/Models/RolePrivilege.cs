@@ -1,37 +1,32 @@
-
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BlogApi.src.Models
 {
-    public class User
+    public class RolePrivilege
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        [StringLength(100)]
-        public  string username { get; set; }
+        public string RolePrivilegeName { get; set; }
         [Required]
-        [StringLength(100)]
-        public  string password { get; set; }
+        public string description { get; set; }
         [Required]
-        public  string passwordSalt { get; set; }
+        public int RoleId{ get; set; }
         [Required]
-        public  int userTypeId { get; set; }
-        [Required]
-        public  bool isActive { get; set; }
+         public  bool isActive { get; set; }
         [Required]
         public  bool isDeleted { get; set; }
         [Required]
         public  DateTime createdDte { get; set; }
         public  DateTime UpdatedDate { get; set; }
-        public virtual ICollection<UserRoleMapping> UserRoleMappings { get; set; }
-        public virtual UserType UserType { get; set; }
+        public Role Role { get; set; }
 
-
-
-
-
+        
     }
 }

@@ -1,4 +1,5 @@
 
+using BlogApi.src.DB.Config;
 using BlogApi.src.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,12 @@ namespace BlogApi.src.DB
         public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RolePrivilege> RolePrivileges { get; set; }
+        public DbSet<UserRoleMapping> UserRoleMappings { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
+
+
+
 
 
 
@@ -70,6 +77,27 @@ namespace BlogApi.src.DB
                 CreatedAt = DateTime.UtcNow,
                 PostId = 3
             });
+            modelBuilder.Entity<RolePrivilege>()
+            .HasOne(n => n.Role)
+            .WithMany(n => n.RolePrivileges)
+            .HasForeignKey(n => n.RoleId)
+            .HasConstraintName("FK_RolePrivilege_Roles");
+            modelBuilder.ApplyConfiguration(new UserRoleMappingConfig());
+            modelBuilder.Entity<UserType>().HasData(
+            new UserType { Id = 1, name = "Admin", description = "Administrator with full access" },
+            new UserType { Id = 2, name = "Editor", description = "Editor with content management access" },
+            new UserType { Id = 3, name = "User", description = "Regular user with limited access" });
+            modelBuilder.Entity<User>()
+            .HasOne(n => n.UserType)
+            .WithMany(n => n.Users)
+            .HasForeignKey(n => n.userTypeId)
+            .HasConstraintName("FK_User_UserType");
+
+            
+
+
+
+
         }
     }
 }

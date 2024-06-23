@@ -52,7 +52,7 @@ namespace BlogApi.Migrations
                         {
                             Id = 1,
                             Content = "This is a sample comment.",
-                            CreatedAt = new DateTime(2024, 6, 23, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8980),
+                            CreatedAt = new DateTime(2024, 6, 23, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(8420),
                             PostId = 3
                         });
                 });
@@ -93,46 +93,46 @@ namespace BlogApi.Migrations
                         {
                             Id = 1,
                             Content = "ASP.NET Core is a free and open-source web framework developed by Microsoft.",
-                            CreatedAt = new DateTime(2024, 6, 13, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8370),
+                            CreatedAt = new DateTime(2024, 6, 13, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB8vWxHzX5mIpJz5aVrqHrDRRfvrb69esckGkGlm6HPw&s",
                             Title = "Introduction to ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 22, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8380)
+                            UpdatedAt = new DateTime(2024, 6, 22, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860)
                         },
                         new
                         {
                             Id = 2,
                             Content = "Entity Framework Core is a lightweight, extensible, and cross-platform version of the popular Entity Framework data access technology.",
-                            CreatedAt = new DateTime(2024, 6, 15, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8380),
+                            CreatedAt = new DateTime(2024, 6, 15, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860),
                             ImageUrl = "https://media.licdn.com/dms/image/D4D12AQEKTlrp8y_g0A/article-cover_image-shrink_720_1280/0/1683976532326?e=2147483647&v=beta&t=41WsN7UYuouE7WcA_pmij4yF__uReRR5qm8rdtngHOM",
                             Title = "Getting Started with Entity Framework Core",
-                            UpdatedAt = new DateTime(2024, 6, 21, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8380)
+                            UpdatedAt = new DateTime(2024, 6, 21, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860)
                         },
                         new
                         {
                             Id = 3,
                             Content = "Middleware is software that's assembled into an application pipeline to handle requests and responses.",
-                            CreatedAt = new DateTime(2024, 6, 18, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390),
+                            CreatedAt = new DateTime(2024, 6, 18, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv3lYL2b29XYVOoFeRIBDWQ9Sb9NL7MS1eBeApMQ8GOw&s",
                             Title = "Understanding Middleware in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 20, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390)
+                            UpdatedAt = new DateTime(2024, 6, 20, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870)
                         },
                         new
                         {
                             Id = 4,
                             Content = "Razor Pages is a page-based programming model that makes building web UI easier and more productive.",
-                            CreatedAt = new DateTime(2024, 6, 20, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390),
+                            CreatedAt = new DateTime(2024, 6, 20, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870),
                             ImageUrl = "https://www.examturf.com/eqtkhtabd/wp-content/uploads/2021/02/ASP.NET-Framework.jpg",
                             Title = "Exploring Razor Pages in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 22, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390)
+                            UpdatedAt = new DateTime(2024, 6, 22, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870)
                         },
                         new
                         {
                             Id = 5,
                             Content = "Blazor is a framework for building interactive web applications with .NET and C#.",
-                            CreatedAt = new DateTime(2024, 6, 22, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390),
+                            CreatedAt = new DateTime(2024, 6, 22, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870),
                             ImageUrl = "https://positiwise.com/blog/wp-content/uploads/2023/01/common-architectures-in-asp-.net-core.jpg",
                             Title = "Introduction to Blazor",
-                            UpdatedAt = new DateTime(2024, 6, 23, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390)
+                            UpdatedAt = new DateTime(2024, 6, 23, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870)
                         });
                 });
 
@@ -171,6 +171,44 @@ namespace BlogApi.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("BlogApi.src.Models.RolePrivilege", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RolePrivilegeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("createdDte")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePrivileges");
+                });
+
             modelBuilder.Entity("BlogApi.src.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -200,7 +238,7 @@ namespace BlogApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("userType")
+                    b.Property<int>("userTypeId")
                         .HasColumnType("integer");
 
                     b.Property<string>("username")
@@ -210,7 +248,76 @@ namespace BlogApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("userTypeId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.UserRoleMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("roleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("roleId");
+
+                    b.HasIndex(new[] { "userId", "roleId" }, "UK_UserRoleMapping")
+                        .IsUnique();
+
+                    b.ToTable("UserRoleMappings");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.UserType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            description = "Administrator with full access",
+                            name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            description = "Editor with content management access",
+                            name = "Editor"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            description = "Regular user with limited access",
+                            name = "User"
+                        });
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.Comment", b =>
@@ -224,9 +331,71 @@ namespace BlogApi.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("BlogApi.src.Models.RolePrivilege", b =>
+                {
+                    b.HasOne("BlogApi.src.Models.Role", "Role")
+                        .WithMany("RolePrivileges")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_RolePrivilege_Roles");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.User", b =>
+                {
+                    b.HasOne("BlogApi.src.Models.UserType", "UserType")
+                        .WithMany("Users")
+                        .HasForeignKey("userTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_User_UserType");
+
+                    b.Navigation("UserType");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.UserRoleMapping", b =>
+                {
+                    b.HasOne("BlogApi.src.Models.Role", "role")
+                        .WithMany("UserRoleMappings")
+                        .HasForeignKey("roleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRoleMapping_Role");
+
+                    b.HasOne("BlogApi.src.Models.User", "user")
+                        .WithMany("UserRoleMappings")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRoleMapping_User");
+
+                    b.Navigation("role");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("BlogApi.src.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.Role", b =>
+                {
+                    b.Navigation("RolePrivileges");
+
+                    b.Navigation("UserRoleMappings");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.User", b =>
+                {
+                    b.Navigation("UserRoleMappings");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.UserType", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
