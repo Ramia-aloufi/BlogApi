@@ -3,6 +3,7 @@ using System;
 using BlogApi.src.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlogApi.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240601063024_AddCommentTable")]
+    partial class AddCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace BlogApi.Migrations
                         {
                             Id = 1,
                             Content = "This is a sample comment.",
-                            CreatedAt = new DateTime(2024, 6, 23, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8980),
+                            CreatedAt = new DateTime(2024, 6, 1, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(8410),
                             PostId = 3
                         });
                 });
@@ -93,124 +96,47 @@ namespace BlogApi.Migrations
                         {
                             Id = 1,
                             Content = "ASP.NET Core is a free and open-source web framework developed by Microsoft.",
-                            CreatedAt = new DateTime(2024, 6, 13, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8370),
+                            CreatedAt = new DateTime(2024, 5, 22, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7840),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB8vWxHzX5mIpJz5aVrqHrDRRfvrb69esckGkGlm6HPw&s",
                             Title = "Introduction to ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 22, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8380)
+                            UpdatedAt = new DateTime(2024, 5, 31, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7840)
                         },
                         new
                         {
                             Id = 2,
                             Content = "Entity Framework Core is a lightweight, extensible, and cross-platform version of the popular Entity Framework data access technology.",
-                            CreatedAt = new DateTime(2024, 6, 15, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8380),
+                            CreatedAt = new DateTime(2024, 5, 24, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850),
                             ImageUrl = "https://media.licdn.com/dms/image/D4D12AQEKTlrp8y_g0A/article-cover_image-shrink_720_1280/0/1683976532326?e=2147483647&v=beta&t=41WsN7UYuouE7WcA_pmij4yF__uReRR5qm8rdtngHOM",
                             Title = "Getting Started with Entity Framework Core",
-                            UpdatedAt = new DateTime(2024, 6, 21, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8380)
+                            UpdatedAt = new DateTime(2024, 5, 30, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850)
                         },
                         new
                         {
                             Id = 3,
                             Content = "Middleware is software that's assembled into an application pipeline to handle requests and responses.",
-                            CreatedAt = new DateTime(2024, 6, 18, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390),
+                            CreatedAt = new DateTime(2024, 5, 27, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv3lYL2b29XYVOoFeRIBDWQ9Sb9NL7MS1eBeApMQ8GOw&s",
                             Title = "Understanding Middleware in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 20, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390)
+                            UpdatedAt = new DateTime(2024, 5, 29, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850)
                         },
                         new
                         {
                             Id = 4,
                             Content = "Razor Pages is a page-based programming model that makes building web UI easier and more productive.",
-                            CreatedAt = new DateTime(2024, 6, 20, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390),
+                            CreatedAt = new DateTime(2024, 5, 29, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850),
                             ImageUrl = "https://www.examturf.com/eqtkhtabd/wp-content/uploads/2021/02/ASP.NET-Framework.jpg",
                             Title = "Exploring Razor Pages in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 22, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390)
+                            UpdatedAt = new DateTime(2024, 5, 31, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850)
                         },
                         new
                         {
                             Id = 5,
                             Content = "Blazor is a framework for building interactive web applications with .NET and C#.",
-                            CreatedAt = new DateTime(2024, 6, 22, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390),
+                            CreatedAt = new DateTime(2024, 5, 31, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850),
                             ImageUrl = "https://positiwise.com/blog/wp-content/uploads/2023/01/common-architectures-in-asp-.net-core.jpg",
                             Title = "Introduction to Blazor",
-                            UpdatedAt = new DateTime(2024, 6, 23, 4, 58, 53, 43, DateTimeKind.Utc).AddTicks(8390)
+                            UpdatedAt = new DateTime(2024, 6, 1, 6, 30, 24, 735, DateTimeKind.Utc).AddTicks(7850)
                         });
-                });
-
-            modelBuilder.Entity("BlogApi.src.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("createdDte")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<bool>("iActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("roleName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("BlogApi.src.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("createdDte")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("passwordSalt")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("userType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("username")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.Comment", b =>

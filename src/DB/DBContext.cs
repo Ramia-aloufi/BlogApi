@@ -4,20 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogApi.src.DB
 {
-    public class DBContext:DbContext
+    public class DBContext(DbContextOptions<DBContext> options) : DbContext(options)
     {
-        public DbSet<Post> posts {get; set;}
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
-        public DBContext(DbContextOptions<DBContext> options):base(options)
-        {
-            
-        }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Post>().HasData(new List<Post>
             {
-                new Post
-                {
+                new() {
                     Id = 1,
                     Title = "Introduction to ASP.NET Core",
                     Content = "ASP.NET Core is a free and open-source web framework developed by Microsoft.",
@@ -25,8 +25,7 @@ namespace BlogApi.src.DB
                     CreatedAt = DateTime.UtcNow.AddDays(-10),
                     UpdatedAt = DateTime.UtcNow.AddDays(-1)
                 },
-                new Post
-                {
+                new() {
                     Id = 2,
                     Title = "Getting Started with Entity Framework Core",
                     Content = "Entity Framework Core is a lightweight, extensible, and cross-platform version of the popular Entity Framework data access technology.",
@@ -34,8 +33,7 @@ namespace BlogApi.src.DB
                     CreatedAt = DateTime.UtcNow.AddDays(-8),
                     UpdatedAt = DateTime.UtcNow.AddDays(-2)
                 },
-                new Post
-                {
+                new() {
                     Id = 3,
                     Title = "Understanding Middleware in ASP.NET Core",
                     Content = "Middleware is software that's assembled into an application pipeline to handle requests and responses.",
@@ -43,8 +41,7 @@ namespace BlogApi.src.DB
                     CreatedAt = DateTime.UtcNow.AddDays(-5),
                     UpdatedAt = DateTime.UtcNow.AddDays(-3)
                 },
-                new Post
-                {
+                new() {
                     Id = 4,
                     Title = "Exploring Razor Pages in ASP.NET Core",
                     Content = "Razor Pages is a page-based programming model that makes building web UI easier and more productive.",
@@ -52,8 +49,7 @@ namespace BlogApi.src.DB
                     CreatedAt = DateTime.UtcNow.AddDays(-3),
                     UpdatedAt = DateTime.UtcNow.AddDays(-1)
                 },
-                new Post
-                {
+                new() {
                     Id = 5,
                     Title = "Introduction to Blazor",
                     Content = "Blazor is a framework for building interactive web applications with .NET and C#.",
@@ -61,9 +57,19 @@ namespace BlogApi.src.DB
                     CreatedAt = DateTime.UtcNow.AddDays(-1),
                     UpdatedAt = DateTime.UtcNow
                 }
-        
+
     });
-       
+            modelBuilder.Entity<Comment>()
+            .HasOne(n => n.Post)
+            .WithMany(n => n.Comments)
+            .HasForeignKey(n => n.PostId);
+            modelBuilder.Entity<Comment>().HasData(new Comment
+            {
+                Id = 1,
+                Content = "This is a sample comment.",
+                CreatedAt = DateTime.UtcNow,
+                PostId = 3
+            });
         }
     }
 }
