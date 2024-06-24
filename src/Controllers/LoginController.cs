@@ -16,41 +16,38 @@ namespace BlogApi.src.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class LoginController : Controller
+    public class LoginController(ILogger<LoginController> logger, IConfiguration configuration) : Controller
     {
-        private readonly IConfiguration _configuration;
-                private readonly ILogger<LoginController> _logger ;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly ILogger<LoginController> _logger = logger;
 
-
-
-        public LoginController(ILogger<LoginController> logger, IConfiguration configuration)
-        {
-            _logger = logger;
-            _configuration = configuration;
-        }
         [HttpPost]
-        public ActionResult<LoginResponceDTO> Login(LoginDTO model){
+        public ActionResult<LoginResponceDTO> Login(LoginDTO model)
+        {
             LoginResponceDTO response = new();
-            if(!ModelState.IsValid)
-            return BadRequest("please provide username and password");
-            if(model.username == "ram" & model.Password == "ram123")
+            if (!ModelState.IsValid)
+                return BadRequest("please provide username and password");
+            if (model.username == "ram" & model.Password == "ram123")
             {
                 var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret"));
                 var tokenHandller = new JwtSecurityTokenHandler();
-                var tokenDescriptor = new SecurityTokenDescriptor(){
+                var tokenDescriptor = new SecurityTokenDescriptor()
+                {
                     Subject = new ClaimsIdentity(new Claim[]{
                         new Claim(ClaimTypes.Role , "admin"),
                         new Claim(ClaimTypes.Name , model.username)
                     }),
                     Expires = DateTime.Now.AddHours(4),
-                    SigningCredentials = new (new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha512Signature)
+                    SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
                 };
                 var token = tokenHandller.CreateToken(tokenDescriptor);
                 var tokenGenerated = tokenHandller.WriteToken(token);
                 response.token = tokenGenerated;
                 response.username = model.username;
-            }else{
-            return BadRequest("please provide valid username and password");
+            }
+            else
+            {
+                return BadRequest("please provide valid username and password");
             }
             return Ok(response);
 

@@ -11,7 +11,7 @@ namespace BlogApi.src.Repository.Generic
     public class Repository<T> : IRepository<T> where T : class
     {
           private readonly DBContext _context;
-          private DbSet<T> _dbSet;
+          private readonly DbSet<T> _dbSet;
 
         public Repository(DBContext context)
         {
