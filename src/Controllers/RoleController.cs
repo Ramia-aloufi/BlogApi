@@ -135,7 +135,6 @@ namespace BlogApi.src.Controllers
                 _apiResponse.StatusCode = HttpStatusCode.OK;
                 return Ok(_apiResponse);
 
-
             }
             catch (Exception ex)
             {
@@ -152,7 +151,6 @@ namespace BlogApi.src.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-
         public async Task<ActionResult<ApiResponse>> DeleteRole(int id)
         {
             try
@@ -174,7 +172,7 @@ namespace BlogApi.src.Controllers
             catch (Exception ex)
             {
                 _apiResponse.Errors.Add(ex.Message);
-                _apiResponse.StatusCode = HttpStatusCode.InternalServerError;
+                _apiResponse.StatusCode = HttpStatusCode.OK;
                 _apiResponse.Status = false;
                 return _apiResponse;
             }
