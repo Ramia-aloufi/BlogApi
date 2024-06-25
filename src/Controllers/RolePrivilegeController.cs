@@ -170,7 +170,7 @@ namespace BlogApi.src.Controllers
 
                 _apiResponse.Data = rolePrivilege;
                 _apiResponse.Status = true;
-                _apiResponse.StatusCode = HttpStatusCode.InternalServerError;
+                _apiResponse.StatusCode = HttpStatusCode.OK;
 
                 return Ok(_apiResponse);
                 

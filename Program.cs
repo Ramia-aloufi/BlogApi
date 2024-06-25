@@ -3,6 +3,7 @@ using BlogApi.src.DB;
 using BlogApi.src.Mappers;
 using BlogApi.src.Repository;
 using BlogApi.src.Repository.Generic;
+using BlogApi.src.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +42,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddAutoMapper(typeof(MapperConfig));
-builder.Services.AddControllers();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddTransient<IPostRepository, PostRepository>();
+
+builder.Services.AddControllers();
 builder.Services.AddCors(option => option.AddPolicy("TesPolicy", policy =>
 policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
 ));
