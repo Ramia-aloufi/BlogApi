@@ -17,10 +17,41 @@ namespace BlogApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("blog")
                 .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("BlogApi.src.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category", "blog");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            name = "Angular"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            name = "Laravel"
+                        });
+                });
 
             modelBuilder.Entity("BlogApi.src.Models.Comment", b =>
                 {
@@ -45,14 +76,14 @@ namespace BlogApi.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", "blog");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Content = "This is a sample comment.",
-                            CreatedAt = new DateTime(2024, 6, 23, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(8420),
+                            CreatedAt = new DateTime(2024, 7, 16, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(1040),
                             PostId = 3
                         });
                 });
@@ -64,6 +95,9 @@ namespace BlogApi.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -86,53 +120,60 @@ namespace BlogApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Posts");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Posts", "blog");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
+                            CategoryId = 1,
                             Content = "ASP.NET Core is a free and open-source web framework developed by Microsoft.",
-                            CreatedAt = new DateTime(2024, 6, 13, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860),
+                            CreatedAt = new DateTime(2024, 7, 6, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(490),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB8vWxHzX5mIpJz5aVrqHrDRRfvrb69esckGkGlm6HPw&s",
                             Title = "Introduction to ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 22, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860)
+                            UpdatedAt = new DateTime(2024, 7, 15, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(490)
                         },
                         new
                         {
                             Id = 2,
+                            CategoryId = 1,
                             Content = "Entity Framework Core is a lightweight, extensible, and cross-platform version of the popular Entity Framework data access technology.",
-                            CreatedAt = new DateTime(2024, 6, 15, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860),
+                            CreatedAt = new DateTime(2024, 7, 8, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500),
                             ImageUrl = "https://media.licdn.com/dms/image/D4D12AQEKTlrp8y_g0A/article-cover_image-shrink_720_1280/0/1683976532326?e=2147483647&v=beta&t=41WsN7UYuouE7WcA_pmij4yF__uReRR5qm8rdtngHOM",
                             Title = "Getting Started with Entity Framework Core",
-                            UpdatedAt = new DateTime(2024, 6, 21, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7860)
+                            UpdatedAt = new DateTime(2024, 7, 14, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500)
                         },
                         new
                         {
                             Id = 3,
+                            CategoryId = 1,
                             Content = "Middleware is software that's assembled into an application pipeline to handle requests and responses.",
-                            CreatedAt = new DateTime(2024, 6, 18, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870),
+                            CreatedAt = new DateTime(2024, 7, 11, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv3lYL2b29XYVOoFeRIBDWQ9Sb9NL7MS1eBeApMQ8GOw&s",
                             Title = "Understanding Middleware in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 20, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870)
+                            UpdatedAt = new DateTime(2024, 7, 13, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500)
                         },
                         new
                         {
                             Id = 4,
+                            CategoryId = 1,
                             Content = "Razor Pages is a page-based programming model that makes building web UI easier and more productive.",
-                            CreatedAt = new DateTime(2024, 6, 20, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870),
+                            CreatedAt = new DateTime(2024, 7, 13, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500),
                             ImageUrl = "https://www.examturf.com/eqtkhtabd/wp-content/uploads/2021/02/ASP.NET-Framework.jpg",
                             Title = "Exploring Razor Pages in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 6, 22, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870)
+                            UpdatedAt = new DateTime(2024, 7, 15, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(540)
                         },
                         new
                         {
                             Id = 5,
+                            CategoryId = 1,
                             Content = "Blazor is a framework for building interactive web applications with .NET and C#.",
-                            CreatedAt = new DateTime(2024, 6, 22, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870),
+                            CreatedAt = new DateTime(2024, 7, 15, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(540),
                             ImageUrl = "https://positiwise.com/blog/wp-content/uploads/2023/01/common-architectures-in-asp-.net-core.jpg",
                             Title = "Introduction to Blazor",
-                            UpdatedAt = new DateTime(2024, 6, 23, 7, 6, 56, 823, DateTimeKind.Utc).AddTicks(7870)
+                            UpdatedAt = new DateTime(2024, 7, 16, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(540)
                         });
                 });
 
@@ -168,7 +209,7 @@ namespace BlogApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", "blog");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.RolePrivilege", b =>
@@ -206,7 +247,7 @@ namespace BlogApi.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RolePrivileges");
+                    b.ToTable("RolePrivileges", "blog");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.User", b =>
@@ -250,7 +291,7 @@ namespace BlogApi.Migrations
 
                     b.HasIndex("userTypeId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "blog");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.UserRoleMapping", b =>
@@ -274,7 +315,7 @@ namespace BlogApi.Migrations
                     b.HasIndex(new[] { "userId", "roleId" }, "UK_UserRoleMapping")
                         .IsUnique();
 
-                    b.ToTable("UserRoleMappings");
+                    b.ToTable("UserRoleMappings", "blog");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.UserType", b =>
@@ -297,7 +338,7 @@ namespace BlogApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserTypes", "blog");
 
                     b.HasData(
                         new
@@ -329,6 +370,17 @@ namespace BlogApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.Post", b =>
+                {
+                    b.HasOne("BlogApi.src.Models.Category", "category")
+                        .WithMany("Posts")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.RolePrivilege", b =>
@@ -374,6 +426,11 @@ namespace BlogApi.Migrations
                     b.Navigation("role");
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("BlogApi.src.Models.Category", b =>
+                {
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.Post", b =>

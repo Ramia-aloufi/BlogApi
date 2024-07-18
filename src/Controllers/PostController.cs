@@ -19,7 +19,7 @@ namespace BlogApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    // [Authorize(Roles = "admin")]
     [ProducesResponseType(401)]
     public class PostController(ILogger<PostController> logger, IMapper mapper, IPostRepository postRepository) : Controller
     {
