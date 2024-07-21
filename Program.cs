@@ -1,9 +1,12 @@
 using System.Text;
 using BlogApi.src.DB;
+using BlogApi.src.DTOs;
 using BlogApi.src.Mappers;
+using BlogApi.src.Models;
 using BlogApi.src.Repository;
 using BlogApi.src.Repository.Generic;
 using BlogApi.src.Services;
+using BlogApi.src.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +47,14 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IService<CategoryDTO>, Service<Category, CategoryDTO>>();
+builder.Services.AddScoped<IService<RoleDTO>, Service<Role, RoleDTO>>();
+builder.Services.AddScoped<IService<PostDTO>, Service<Post, PostDTO>>();
+builder.Services.AddScoped<IService<UserDTO>, Service<User, UserDTO>>();
+builder.Services.AddScoped<IService<RolePrivilegeDTO>, Service<RolePrivilege, RolePrivilegeDTO>>();
+
+
+
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

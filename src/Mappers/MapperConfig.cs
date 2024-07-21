@@ -11,12 +11,11 @@ namespace BlogApi.src.Mappers
         {
             CreateMap<Post,PostDTO>().ReverseMap();
             CreateMap<Role,RoleDTO>().ReverseMap();
+            CreateMap<Role,ReadRoleDTO>().ReverseMap();
+
             CreateMap<User,UserDTO>().ReverseMap();
             CreateMap<User,UserReadOnlyDTO>().ReverseMap();
             CreateMap<Category,CategoryDTO>().ReverseMap();
-
-
-
             CreateMap<RolePrivilege,RolePrivilegeDTO>().ReverseMap();
 
 

@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace BlogApi.src.DTOs
 {
-    public class RoleDTO
+    public class RoleDTO:ITDto
+    {
+        [Required]
+        public required string Name { get; set; }
+        public required  string Description { get; set; }
+        public int Id { get; set; }
+    }
+        public class ReadRoleDTO
     {
         public int Id { get; set; }
         [Required]
-        public  string roleName { get; set; }
-        public  string description { get; set; }
-        [Required]
-        public  bool iActive { get; set; }
+        public required string Name { get; set; }
+        public required  string Description { get; set; } 
        
     }
 }

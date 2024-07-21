@@ -7,18 +7,18 @@ using BlogApi.src.Models;
 
 namespace BlogApi.src.DTOs
 {
-    public class RolePrivilegeDTO
+    public class RolePrivilegeDTO:ITDto
     {
 
         public int Id { get; set; }
         [Required]
-        public string RolePrivilegeName { get; set; }
+        public required string Name { get; set; }
         [Required]
-        public string description { get; set; }
+        public string Description { get; set; } = "";
         [Required]
         public int RoleId{ get; set; }
-         public  bool isActive { get; set; }
-        public  bool isDeleted { get; set; }
+         public  bool IsActive { get; set; }
+        public  bool IsDeleted { get; set; }
 
     }
 }

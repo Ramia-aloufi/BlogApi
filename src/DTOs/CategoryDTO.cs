@@ -7,13 +7,13 @@ using BlogApi.src.Models;
 
 namespace BlogApi.src.DTOs
 {
-    public class CategoryDTO
+    public class CategoryDTO:ITDto
     {
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
-        public string name { get; set; }
-        public ICollection<Post> Posts { get; set; }
+        public required string  Name { get; set; }
+        public ICollection<Post>? Posts { get; set; }
 
 
     }

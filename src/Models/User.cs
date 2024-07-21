@@ -1,33 +1,31 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BlogApi.src.DTOs;
 
 namespace BlogApi.src.Models
 {
-    public class User
+    public class User:IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
-        public  string username { get; set; }
+        public required string Name { get; set; }
+         [Required]
+        [EmailAddress]
+        public required string Email { get; set; }
         [Required]
         [StringLength(100)]
-        public  string password { get; set; }
+        public required string Password { get; set; }
         [Required]
-        public  string passwordSalt { get; set; }
-        [Required]
-        public  int userTypeId { get; set; }
-        [Required]
-        public  bool isActive { get; set; }
-        [Required]
-        public  bool isDeleted { get; set; }
-        [Required]
-        public  DateTime createdDte { get; set; }
-        public  DateTime UpdatedDate { get; set; }
-        public virtual ICollection<UserRoleMapping> UserRoleMappings { get; set; }
-        public virtual UserType UserType { get; set; }
+        public required string PasswordSalt { get; set; }
+        public  bool IsActive { get; set; } = true;
+        public  bool IsDeleted { get; set; } = false;
+        public  DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public  DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+        public virtual ICollection<UserRoleMapping>? UserRoleMappings { get; set; }
 
 
 

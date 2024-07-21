@@ -1,17 +1,23 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using AutoMapper;
 using BlogApi.src.DTOs;
 using BlogApi.src.Models;
 using BlogApi.src.Repository.Generic;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BlogApi.src.Services
 {
-    public class UserService(IRepository<User> UserRepository, IMapper mapper) : IUserService
+    public class UserService(IRepository<User> UserRepository, IMapper mapper, IConfiguration configuration) : IUserService
     {
         private readonly IRepository<User> _UserRepository = UserRepository;
 
         private readonly IMapper _mapper = mapper;
+        private readonly IConfiguration _configuration = configuration;
 
 
         public (string passHash, string salt) CreatePassHash(string password)
@@ -32,25 +38,20 @@ namespace BlogApi.src.Services
             ));
             return (hash, Convert.ToBase64String(salt));
         }
-        public async Task<bool> CreateUser(UserDTO dto)
+        public async Task<bool> SignUp(UserDTO dto)
         {
             ArgumentNullException.ThrowIfNull(dto, $"the argument {nameof(dto)} is null");
 
-            var existUser = await _UserRepository.GetById(n => n.username.Equals(dto.username));
+            var existUser = await _UserRepository.GetById(n => n.Name == dto.Name);
             if (existUser != null)
                 throw new Exception("The User Already exist");
 
             User newUser = _mapper.Map<User>(dto);
-            newUser.createdDte = DateTime.UtcNow;
-            newUser.UpdatedDate = DateTime.UtcNow;
-            newUser.isDeleted = false;
-
-
-            if (!string.IsNullOrEmpty(dto.password))
+            if (!string.IsNullOrEmpty(dto.Password))
             {
-                var passHash = CreatePassHash(newUser.password);
-                newUser.password = passHash.passHash;
-                newUser.passwordSalt = passHash.salt;
+                var passHash = CreatePassHash(newUser.Password);
+                newUser.Password = passHash.passHash;
+                newUser.PasswordSalt = passHash.salt;
             }
 
             await _UserRepository.Create(newUser);
@@ -83,13 +84,42 @@ namespace BlogApi.src.Services
         {
 
             if (id <= 0)
-                throw new ArgumentException("The user ID must be greater than zero.", nameof(id));
+        throw new Exception("The user ID must be greater than zero."){ Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
 
-            var user = await _UserRepository.GetById(n => n.Id == id) ?? throw new Exception($"user with id {id} not found");
-            return await _UserRepository.Delete(user); ;
+            var user = await _UserRepository.GetById(n => n.Id == id) ?? throw new Exception($"user with id {id} not found"){ Data = { ["StatusCode"] = HttpStatusCode.NotFound } };
+            return await _UserRepository.Delete(user);
         }
+        public async Task<LoginReadDTO> Login(LoginDTO dto)
+        {
+            ArgumentNullException.ThrowIfNull(dto, $"the argument {nameof(dto)} is null");
+            var existUser = await _UserRepository.GetById(n => n.Email == dto.Email, true) ?? throw new Exception("The User not found");
+
+            var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret") ?? "");
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity([
+                        new(ClaimTypes.Role , "user"),
+                        new(ClaimTypes.Name , dto.Email)
+                    ]),
+                Expires = DateTime.Now.AddHours(4),
+                SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenGenerated = tokenHandler.WriteToken(token);
+            LoginReadDTO loginData = new()
+            {
+                Token = tokenGenerated,
+                Name = existUser.Name
+            };
 
 
+            return loginData;
+
+
+
+
+        }
 
     }
 }

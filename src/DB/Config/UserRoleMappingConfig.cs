@@ -12,14 +12,14 @@ namespace BlogApi.src.DB.Config
     {
         public void Configure(EntityTypeBuilder<UserRoleMapping> builder)
         {
-           builder.HasIndex(n => new { n.userId, n.roleId }, "UK_UserRoleMapping").IsUnique();
-            builder.HasOne(n => n.role)
+           builder.HasIndex(n => new { n.UserId, n.RoleId }, "UK_UserRoleMapping").IsUnique();
+            builder.HasOne(n => n.Role)
             .WithMany(n => n.UserRoleMappings)
-            .HasForeignKey(n => n.roleId)
+            .HasForeignKey(n => n.RoleId)
             .HasConstraintName("FK_UserRoleMapping_Role");
-            builder.HasOne(n => n.user)
+            builder.HasOne(n => n.User)
             .WithMany(n => n.UserRoleMappings)
-            .HasForeignKey(n => n.userId )
+            .HasForeignKey(n => n.UserId )
             .HasConstraintName("FK_UserRoleMapping_User");
         }
     }

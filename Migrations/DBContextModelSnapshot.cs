@@ -31,7 +31,7 @@ namespace BlogApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -44,12 +44,12 @@ namespace BlogApi.Migrations
                         new
                         {
                             Id = 1,
-                            name = "Angular"
+                            Name = "Angular"
                         },
                         new
                         {
                             Id = 2,
-                            name = "Laravel"
+                            Name = "Laravel"
                         });
                 });
 
@@ -83,7 +83,7 @@ namespace BlogApi.Migrations
                         {
                             Id = 1,
                             Content = "This is a sample comment.",
-                            CreatedAt = new DateTime(2024, 7, 16, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(1040),
+                            CreatedAt = new DateTime(2024, 7, 21, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(3040),
                             PostId = 3
                         });
                 });
@@ -110,7 +110,7 @@ namespace BlogApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -130,50 +130,50 @@ namespace BlogApi.Migrations
                             Id = 1,
                             CategoryId = 1,
                             Content = "ASP.NET Core is a free and open-source web framework developed by Microsoft.",
-                            CreatedAt = new DateTime(2024, 7, 6, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(490),
+                            CreatedAt = new DateTime(2024, 7, 11, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2420),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB8vWxHzX5mIpJz5aVrqHrDRRfvrb69esckGkGlm6HPw&s",
-                            Title = "Introduction to ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 7, 15, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(490)
+                            Name = "Introduction to ASP.NET Core",
+                            UpdatedAt = new DateTime(2024, 7, 20, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2430)
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
                             Content = "Entity Framework Core is a lightweight, extensible, and cross-platform version of the popular Entity Framework data access technology.",
-                            CreatedAt = new DateTime(2024, 7, 8, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500),
+                            CreatedAt = new DateTime(2024, 7, 13, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2430),
                             ImageUrl = "https://media.licdn.com/dms/image/D4D12AQEKTlrp8y_g0A/article-cover_image-shrink_720_1280/0/1683976532326?e=2147483647&v=beta&t=41WsN7UYuouE7WcA_pmij4yF__uReRR5qm8rdtngHOM",
-                            Title = "Getting Started with Entity Framework Core",
-                            UpdatedAt = new DateTime(2024, 7, 14, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500)
+                            Name = "Getting Started with Entity Framework Core",
+                            UpdatedAt = new DateTime(2024, 7, 19, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2430)
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 1,
                             Content = "Middleware is software that's assembled into an application pipeline to handle requests and responses.",
-                            CreatedAt = new DateTime(2024, 7, 11, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500),
+                            CreatedAt = new DateTime(2024, 7, 16, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2430),
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv3lYL2b29XYVOoFeRIBDWQ9Sb9NL7MS1eBeApMQ8GOw&s",
-                            Title = "Understanding Middleware in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 7, 13, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500)
+                            Name = "Understanding Middleware in ASP.NET Core",
+                            UpdatedAt = new DateTime(2024, 7, 18, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2430)
                         },
                         new
                         {
                             Id = 4,
                             CategoryId = 1,
                             Content = "Razor Pages is a page-based programming model that makes building web UI easier and more productive.",
-                            CreatedAt = new DateTime(2024, 7, 13, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(500),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2440),
                             ImageUrl = "https://www.examturf.com/eqtkhtabd/wp-content/uploads/2021/02/ASP.NET-Framework.jpg",
-                            Title = "Exploring Razor Pages in ASP.NET Core",
-                            UpdatedAt = new DateTime(2024, 7, 15, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(540)
+                            Name = "Exploring Razor Pages in ASP.NET Core",
+                            UpdatedAt = new DateTime(2024, 7, 20, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2440)
                         },
                         new
                         {
                             Id = 5,
                             CategoryId = 1,
                             Content = "Blazor is a framework for building interactive web applications with .NET and C#.",
-                            CreatedAt = new DateTime(2024, 7, 15, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(540),
+                            CreatedAt = new DateTime(2024, 7, 20, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2440),
                             ImageUrl = "https://positiwise.com/blog/wp-content/uploads/2023/01/common-architectures-in-asp-.net-core.jpg",
-                            Title = "Introduction to Blazor",
-                            UpdatedAt = new DateTime(2024, 7, 16, 4, 6, 27, 103, DateTimeKind.Utc).AddTicks(540)
+                            Name = "Introduction to Blazor",
+                            UpdatedAt = new DateTime(2024, 7, 21, 13, 15, 52, 292, DateTimeKind.Utc).AddTicks(2440)
                         });
                 });
 
@@ -185,27 +185,27 @@ namespace BlogApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime>("CreatedDte")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("createdDte")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("description")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
-                    b.Property<bool>("iActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("isDeleted")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("roleName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -220,28 +220,27 @@ namespace BlogApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedDte")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("RolePrivilegeName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("createdDte")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -258,38 +257,37 @@ namespace BlogApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("createdDte")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("passwordSalt")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("userTypeId")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("username")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.HasIndex("userTypeId");
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Users", "blog");
                 });
@@ -302,63 +300,20 @@ namespace BlogApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("roleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("userId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("roleId");
+                    b.HasIndex("RoleId");
 
-                    b.HasIndex(new[] { "userId", "roleId" }, "UK_UserRoleMapping")
+                    b.HasIndex(new[] { "UserId", "RoleId" }, "UK_UserRoleMapping")
                         .IsUnique();
 
                     b.ToTable("UserRoleMappings", "blog");
-                });
-
-            modelBuilder.Entity("BlogApi.src.Models.UserType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserTypes", "blog");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            description = "Administrator with full access",
-                            name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            description = "Editor with content management access",
-                            name = "Editor"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            description = "Regular user with limited access",
-                            name = "User"
-                        });
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.Comment", b =>
@@ -374,13 +329,13 @@ namespace BlogApi.Migrations
 
             modelBuilder.Entity("BlogApi.src.Models.Post", b =>
                 {
-                    b.HasOne("BlogApi.src.Models.Category", "category")
+                    b.HasOne("BlogApi.src.Models.Category", "Category")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("category");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.RolePrivilege", b =>
@@ -395,37 +350,25 @@ namespace BlogApi.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("BlogApi.src.Models.User", b =>
-                {
-                    b.HasOne("BlogApi.src.Models.UserType", "UserType")
-                        .WithMany("Users")
-                        .HasForeignKey("userTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_User_UserType");
-
-                    b.Navigation("UserType");
-                });
-
             modelBuilder.Entity("BlogApi.src.Models.UserRoleMapping", b =>
                 {
-                    b.HasOne("BlogApi.src.Models.Role", "role")
+                    b.HasOne("BlogApi.src.Models.Role", "Role")
                         .WithMany("UserRoleMappings")
-                        .HasForeignKey("roleId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserRoleMapping_Role");
 
-                    b.HasOne("BlogApi.src.Models.User", "user")
+                    b.HasOne("BlogApi.src.Models.User", "User")
                         .WithMany("UserRoleMappings")
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserRoleMapping_User");
 
-                    b.Navigation("role");
+                    b.Navigation("Role");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BlogApi.src.Models.Category", b =>
@@ -448,11 +391,6 @@ namespace BlogApi.Migrations
             modelBuilder.Entity("BlogApi.src.Models.User", b =>
                 {
                     b.Navigation("UserRoleMappings");
-                });
-
-            modelBuilder.Entity("BlogApi.src.Models.UserType", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
