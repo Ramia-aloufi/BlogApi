@@ -40,9 +40,9 @@ namespace BlogApi.src.Repository.Generic
 
         }
 
-        public async Task<T> GetById(Expression<Func<T,bool>> filter , bool traking = false)
+        public async Task<T> GetById(Expression<Func<T,bool>> filter , bool tracking = false)
         {
-            if(traking)
+            if(tracking)
              return await _dbSet.AsNoTracking().Where(filter).FirstOrDefaultAsync();
 
             return await _dbSet.Where(filter).FirstOrDefaultAsync();

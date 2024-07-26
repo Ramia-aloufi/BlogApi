@@ -20,7 +20,6 @@ namespace BlogApi.src.Services.Implementations
             var newData = _mapper.Map<TEntity>(dto);
             var entityData = await _Repository.Create(newData);
             var dtoData = _mapper.Map<TDto>(entityData);
-
             return dtoData;
         }
         public async Task<bool> DeleteAsync(int id)

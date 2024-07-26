@@ -17,10 +17,11 @@ namespace BlogApi.src.DTOs
         public required string Email { get; set; }
         [Required]
         public required string Password { get; set; }
+        public  string? PasswordSalt { get; set; }
+
     }
     public class UserReadOnlyDTO:ITDto
     {
-
         public int Id { get; set; }
         [Required]
         public required string Name { get; set; }
@@ -41,6 +42,8 @@ namespace BlogApi.src.DTOs
     }
     public class RegisterDTO
     {
+        [Required]
+        public required string Name { get; set; }
         [Required]
         [EmailAddress]
         public required string Email { get; set; }

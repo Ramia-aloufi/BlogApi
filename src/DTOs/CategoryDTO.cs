@@ -17,4 +17,13 @@ namespace BlogApi.src.DTOs
 
 
     }
+        public class CategoryPostDTO:ITDto
+    {
+        public int Id { get; set; }
+        [Required]
+        [StringLength(100)]
+        public required string  Name { get; set; }
+
+
+    }
 }

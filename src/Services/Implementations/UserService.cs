@@ -7,18 +7,17 @@ using AutoMapper;
 using BlogApi.src.DTOs;
 using BlogApi.src.Models;
 using BlogApi.src.Repository.Generic;
+using BlogApi.src.Services.Implementations;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BlogApi.src.Services
 {
-    public class UserService(IRepository<User> UserRepository, IMapper mapper, IConfiguration configuration) : IUserService
+    public class UserService(IRepository<User> userRepository, IMapper mapper, IConfiguration configuration) : Service<User, UserDTO>(userRepository, mapper), IUserService
     {
-        private readonly IRepository<User> _UserRepository = UserRepository;
-
+        private readonly IRepository<User> _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
         private readonly IConfiguration _configuration = configuration;
-
 
         public (string passHash, string salt) CreatePassHash(string password)
         {
@@ -38,62 +37,22 @@ namespace BlogApi.src.Services
             ));
             return (hash, Convert.ToBase64String(salt));
         }
-        public async Task<bool> SignUp(UserDTO dto)
+        public bool VerifyPassword(string password, string storedHash, string storedSalt)
         {
-            ArgumentNullException.ThrowIfNull(dto, $"the argument {nameof(dto)} is null");
+            var saltBytes = Convert.FromBase64String(storedSalt);
+            var hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: saltBytes,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8
+            ));
 
-            var existUser = await _UserRepository.GetById(n => n.Name == dto.Name);
-            if (existUser != null)
-                throw new Exception("The User Already exist");
-
-            User newUser = _mapper.Map<User>(dto);
-            if (!string.IsNullOrEmpty(dto.Password))
-            {
-                var passHash = CreatePassHash(newUser.Password);
-                newUser.Password = passHash.passHash;
-                newUser.PasswordSalt = passHash.salt;
-            }
-
-            await _UserRepository.Create(newUser);
-            return true;
+            return hash == storedHash;
         }
-        public async Task<List<UserReadOnlyDTO>> GetAllUsers()
+
+        public string CreateToken(LoginDTO dto)
         {
-            var users = await _UserRepository.GetAll();
-            return _mapper.Map<List<UserReadOnlyDTO>>(users);
-        }
-        public async Task<UserReadOnlyDTO> GetUserById(int id)
-        {
-            var user = await _UserRepository.GetById(n => n.Id == id);
-            return _mapper.Map<UserReadOnlyDTO>(user);
-        }
-        public async Task<bool> UpdateUserById(UserReadOnlyDTO dto)
-        {
-            ArgumentNullException.ThrowIfNull(dto, $"the argument {nameof(dto)} is null");
-
-            var existUser = await _UserRepository.GetById(n => n.Id == dto.Id, true) ?? throw new Exception("The User not found");
-            _mapper.Map(dto, existUser);
-
-            existUser.UpdatedDate = DateTime.UtcNow;
-
-
-            await _UserRepository.Update(existUser);
-            return true;
-        }
-        public async Task<bool> DeleteUserById(int id)
-        {
-
-            if (id <= 0)
-        throw new Exception("The user ID must be greater than zero."){ Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
-
-            var user = await _UserRepository.GetById(n => n.Id == id) ?? throw new Exception($"user with id {id} not found"){ Data = { ["StatusCode"] = HttpStatusCode.NotFound } };
-            return await _UserRepository.Delete(user);
-        }
-        public async Task<LoginReadDTO> Login(LoginDTO dto)
-        {
-            ArgumentNullException.ThrowIfNull(dto, $"the argument {nameof(dto)} is null");
-            var existUser = await _UserRepository.GetById(n => n.Email == dto.Email, true) ?? throw new Exception("The User not found");
-
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret") ?? "");
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor()
@@ -107,17 +66,51 @@ namespace BlogApi.src.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenGenerated = tokenHandler.WriteToken(token);
+            return tokenGenerated;
+        }
+
+        public async Task<LoginReadDTO> Login(LoginDTO dto)
+        {
+            if (dto == null)
+                throw new Exception($"the argument {nameof(dto)} is null") { Data = { ["StatusCode"] = HttpStatusCode.NotFound } };
+            var exist = await _userRepository.GetById(n => n.Email == dto.Email) ?? throw new Exception("Login failed: email not found.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+            if (!VerifyPassword(dto.Password,exist.Password,exist.PasswordSalt))
+                throw new Exception("Login failed: incorrect password.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+
             LoginReadDTO loginData = new()
             {
-                Token = tokenGenerated,
-                Name = existUser.Name
+                Token = CreateToken(dto),
+                Name = exist.Name
             };
-
-
             return loginData;
 
+        }
 
+        public async Task<UserDTO> SignUp(RegisterDTO dto)
+        {
+            if (dto == null)
+                throw new Exception($"the argument {nameof(dto)} is null") { Data = { ["StatusCode"] = HttpStatusCode.NotFound } };
+            var exist = await _userRepository.GetById(n => n.Email == dto.Email);
+            if (exist != null)
+                throw new Exception("The Already exist") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+                if (dto.Password != dto.ConfirmPassword)
+                throw new Exception("The password and confirmation password do not match.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+                UserDTO user = new(){
+                    Name = dto.Name,
+                    Email = dto.Email,
+                    Password = dto.Password
 
+                };
+            var newUser = _mapper.Map<User>(user);
+            if (!string.IsNullOrEmpty(dto.Password))
+            {
+                var (passHash,passSalt) = CreatePassHash(newUser.Password);
+                newUser.Password = passHash;
+                newUser.PasswordSalt = passSalt;
+            }
+            var entityData = await _userRepository.Create(newUser);
+            var dtoData = _mapper.Map<UserDTO>(entityData);
+            return dtoData;
 
         }
 
