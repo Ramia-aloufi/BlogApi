@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using BlogApi.src.Models;
 
 namespace BlogApi.src.DTOs
 {
     public class UserDTO:ITDto
     {
         public int Id { get; set; }
-
         [Required]
         public required string Name { get; set; }
         [Required]
@@ -17,7 +17,10 @@ namespace BlogApi.src.DTOs
         public required string Email { get; set; }
         [Required]
         public required string Password { get; set; }
+        public string Role { get; set; } = "user";
         public  string? PasswordSalt { get; set; }
+        public  ICollection<Comment>? Comments { get; set; }
+
 
     }
     public class UserReadOnlyDTO:ITDto
@@ -63,4 +66,12 @@ namespace BlogApi.src.DTOs
         public required string Token { get; set; }
         public required string Name { get; set; }
  }
+
+      public class ActivateUser{
+
+    public string Token { get; set; }
+    public int Id { get; set; }
+
+ }
+ 
 }

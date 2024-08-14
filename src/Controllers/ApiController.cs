@@ -45,11 +45,11 @@ namespace BlogApi.src.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<ActionResult<ApiResponse>> GetAll()
+        public async Task<ActionResult<ApiResponse>> GetAll(int pageNumber = 1 , int pageSize = 0)
         {
             try
             {
-                var result = await _service.GetAllAsync();
+                var result = await _service.GetAllAsync(pageNumber,pageSize);
                 var response = ApiResponseHelper.SuccessResponse(" Retrieved Successfully!", result,HttpStatusCode.OK);
                 return StatusCode((int)response.StatusCode, response);             }
             catch (Exception ex)

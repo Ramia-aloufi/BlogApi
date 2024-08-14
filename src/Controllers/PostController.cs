@@ -13,6 +13,7 @@ using BlogApi.src.Models;
 using BlogApi.src.Repository;
 using BlogApi.src.Repository.Generic;
 using BlogApi.src.Services;
+using BlogApi.src.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -21,6 +21,6 @@ namespace BlogApi.src.DTOs
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         [Required]
         public int CategoryId { get; set; }
-
+        public virtual  List<CommentOnPostDTO> Comments { get; set; } = [];
     }
 }

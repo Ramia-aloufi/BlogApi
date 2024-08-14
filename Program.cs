@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using BlogApi.src.DB;
 using BlogApi.src.DTOs;
 using BlogApi.src.Mappers;
@@ -7,17 +8,25 @@ using BlogApi.src.Repository;
 using BlogApi.src.Repository.Generic;
 using BlogApi.src.Services;
 using BlogApi.src.Services.Implementations;
+using BlogApi.src.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.CodeAnalysis.Options;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var _config = builder.Configuration;
-var DefaultConnection = new NpgsqlDataSourceBuilder($"Server={_config["Db:Server"]};User Id={_config["Db:Username"]};Database={_config["Db:Database"]};Password={_config["Db:Password"]};Port={_config["Db:Port"]}").Build();
+
+var dataSourceBuilder = new NpgsqlDataSourceBuilder($"Server={_config["Db:Server"]};User Id={_config["Db:Username"]};Database={_config["Db:Database"]};Password={_config["Db:Password"]};Port={_config["Db:Port"]}");
+dataSourceBuilder.MapEnum<Role>();
+
 var key = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecret"));
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -46,19 +55,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IService<CategoryDTO>, Service<Category, CategoryDTO>>();
-builder.Services.AddScoped<IService<RoleDTO>, Service<Role, RoleDTO>>();
+builder.Services.AddScoped<IService<CommentDTO>, Service<Comment, CommentDTO>>();
 builder.Services.AddScoped<IService<PostDTO>, Service<Post, PostDTO>>();
 builder.Services.AddScoped<IService<UserDTO>, Service<User, UserDTO>>();
-builder.Services.AddScoped<IService<RolePrivilegeDTO>, Service<RolePrivilege, RolePrivilegeDTO>>();
-
-
-
-builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);;
 builder.Services.AddCors(option => option.AddPolicy("TesPolicy", policy =>
 policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
 ));
@@ -69,8 +76,6 @@ builder.Services.AddAuthentication(option =>
     //I can identify multiple AddJwtBearer with different names
 }).AddJwtBearer(option =>
 {
-    //Validation criteria
-    //option.RequireHttpsMetadata = false;
     option.SaveToken = true;
     option.TokenValidationParameters = new TokenValidationParameters()
     {
@@ -82,13 +87,20 @@ builder.Services.AddAuthentication(option =>
         ValidateAudience = false,
     };
 });
+var dataSource = dataSourceBuilder.Build();
+
 builder.Services.AddDbContext<DBContext>(option =>
 {
-    option.UseNpgsql(DefaultConnection);
+    option.UseNpgsql(dataSource);
+    
 });
+
+
+
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

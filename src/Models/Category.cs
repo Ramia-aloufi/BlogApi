@@ -17,7 +17,7 @@ namespace BlogApi.src.Models
         [StringLength(100)]
         public required string Name { get; set; }
 
-        public ICollection<Post>? Posts { get; set; }
+        public virtual ICollection<Post>? Posts { get; set; }
 
 
 

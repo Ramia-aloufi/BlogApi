@@ -21,15 +21,13 @@ namespace BlogApi.src.Models
         public required string Password { get; set; }
         [Required]
         public required string PasswordSalt { get; set; }
-        public  bool IsActive { get; set; } = true;
+        public  bool IsActive { get; set; } = false;
         public  bool IsDeleted { get; set; } = false;
+        public string? ActivationToken { get; set; } 
+        public DateTime? TokenExpiration { get; set; } 
         public  DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public  DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
-        public virtual ICollection<UserRoleMapping>? UserRoleMappings { get; set; }
-
-
-
-
-
+        public Role Role { get; set; } = Role.user;
+        public virtual ICollection<Comment>? Comments { get; set; }
     }
 }

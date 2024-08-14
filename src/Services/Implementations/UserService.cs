@@ -9,14 +9,17 @@ using BlogApi.src.Models;
 using BlogApi.src.Repository.Generic;
 using BlogApi.src.Services.Implementations;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BlogApi.src.Services
 {
-    public class UserService(IRepository<User> userRepository, IMapper mapper, IConfiguration configuration) : Service<User, UserDTO>(userRepository, mapper), IUserService
+    public class UserService(IRepository<User> userRepository, IMapper mapper, IConfiguration configuration, IEmailSender emailSender) : Service<User, UserDTO>(userRepository, mapper), IUserService
     {
         private readonly IRepository<User> _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
+        private readonly IEmailSender _emailSender = emailSender;
         private readonly IConfiguration _configuration = configuration;
 
         public (string passHash, string salt) CreatePassHash(string password)
@@ -51,15 +54,17 @@ namespace BlogApi.src.Services
             return hash == storedHash;
         }
 
-        public string CreateToken(LoginDTO dto)
+        public string CreateToken(User user)
         {
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret") ?? "");
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity([
-                        new(ClaimTypes.Role , "user"),
-                        new(ClaimTypes.Name , dto.Email)
+                        new(ClaimTypes.Role , user.Role.ToString()),
+                        new(ClaimTypes.Name , user.Name),
+                        new(ClaimTypes.NameIdentifier , user.Id.ToString())
+
                     ]),
                 Expires = DateTime.Now.AddHours(4),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
@@ -74,14 +79,17 @@ namespace BlogApi.src.Services
             if (dto == null)
                 throw new Exception($"the argument {nameof(dto)} is null") { Data = { ["StatusCode"] = HttpStatusCode.NotFound } };
             var exist = await _userRepository.GetById(n => n.Email == dto.Email) ?? throw new Exception("Login failed: email not found.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
-            if (!VerifyPassword(dto.Password,exist.Password,exist.PasswordSalt))
+            if (!VerifyPassword(dto.Password, exist.Password, exist.PasswordSalt))
                 throw new Exception("Login failed: incorrect password.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
 
+            var token = CreateToken(exist);
             LoginReadDTO loginData = new()
             {
-                Token = CreateToken(dto),
+                Token = token,
                 Name = exist.Name
             };
+
+
             return loginData;
 
         }
@@ -93,25 +101,59 @@ namespace BlogApi.src.Services
             var exist = await _userRepository.GetById(n => n.Email == dto.Email);
             if (exist != null)
                 throw new Exception("The Already exist") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
-                if (dto.Password != dto.ConfirmPassword)
+            if (dto.Password != dto.ConfirmPassword)
                 throw new Exception("The password and confirmation password do not match.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
-                UserDTO user = new(){
-                    Name = dto.Name,
-                    Email = dto.Email,
-                    Password = dto.Password
-
-                };
+            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+            UserDTO user = new()
+            {
+                Name = dto.Name,
+                Email = dto.Email,
+                Password = dto.Password,
+            };
             var newUser = _mapper.Map<User>(user);
             if (!string.IsNullOrEmpty(dto.Password))
             {
-                var (passHash,passSalt) = CreatePassHash(newUser.Password);
+                var (passHash, passSalt) = CreatePassHash(newUser.Password);
                 newUser.Password = passHash;
                 newUser.PasswordSalt = passSalt;
             }
+            newUser.ActivationToken = token;
+            newUser.TokenExpiration = DateTime.UtcNow.AddHours(24);
+
             var entityData = await _userRepository.Create(newUser);
             var dtoData = _mapper.Map<UserDTO>(entityData);
-            return dtoData;
+            var callbackUrl = $"{_configuration["AppUrl"]}/activate?userId={dtoData.Id}&token={newUser.ActivationToken}";
+            // Send confirmation email
+            await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
+                $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
 
+            return dtoData;
+        }
+
+        public async Task<bool> ActivateAccountAsync(string token, int id)
+        {
+            var user = await _userRepository.GetById(a => a.Id == id) ?? throw new Exception("User not found.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+
+            if (user.IsActive)
+                throw new Exception("User is already activated.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+
+            if (user.ActivationToken != token)
+                throw new Exception("Invalid token.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+
+            if (user.TokenExpiration < DateTime.UtcNow)
+            {
+                throw new Exception("Token has expired.") { Data = { ["StatusCode"] = HttpStatusCode.BadRequest } };
+            }
+
+            user.IsActive = true;
+            user.TokenExpiration = null;
+            user.ActivationToken = null;
+
+            await _userRepository.Update(user);
+            return true;
         }
 
     }

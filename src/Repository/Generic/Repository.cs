@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using BlogApi.src.DB;
+using BlogApi.src.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogApi.src.Repository.Generic
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-          private readonly DBContext _context;
-          private readonly DbSet<T> _dbSet;
+        private readonly DBContext _context;
+        private readonly DbSet<T> _dbSet;
 
         public Repository(DBContext context)
         {
@@ -24,7 +27,6 @@ namespace BlogApi.src.Repository.Generic
             _dbSet.Add(record);
             await _context.SaveChangesAsync();
             return record;
-
         }
 
         public async Task<bool> Delete(T record)
@@ -34,27 +36,30 @@ namespace BlogApi.src.Repository.Generic
             return true;
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>> GetAll(int pageNumber , int pageSize )
+
         {
+            if(pageSize <= 0)
             return await _dbSet.ToListAsync();
+            else
+            return await _dbSet.Skip((pageNumber - 1) * pageSize)
+                                   .Take(pageSize).ToListAsync();
 
         }
 
-        public async Task<T> GetById(Expression<Func<T,bool>> filter , bool tracking = false)
+        public async Task<T> GetById(Expression<Func<T, bool>> filter, bool tracking = false)
         {
-            if(tracking)
-             return await _dbSet.AsNoTracking().Where(filter).FirstOrDefaultAsync();
-
-            return await _dbSet.Where(filter).FirstOrDefaultAsync();
+            if (tracking)
+                return (await _dbSet.AsNoTracking().Where(filter).FirstOrDefaultAsync())!;
+            return (await _dbSet.Where(filter).FirstOrDefaultAsync())!;
         }
 
         public async Task<T> Update(T record)
-        {
 
+        {
             _dbSet.Update(record);
             await _context.SaveChangesAsync();
             return record;
-
         }
     }
-    }
+}
